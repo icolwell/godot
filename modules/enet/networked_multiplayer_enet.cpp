@@ -785,9 +785,9 @@ int NetworkedMultiplayerENet::get_peer_port(int p_peer_id) const {
 }
 
 void NetworkedMultiplayerENet::set_peer_timeout(int p_peer_id, int p_timeout_limit, int p_timeout_min, int p_timeout_max) {
-	ERR_FAIL_COND(!peer_map.has(p_peer_id));
-	ERR_FAIL_COND(!is_server() && p_peer_id != 1);
-	ERR_FAIL_COND(peer_map[p_peer_id] == NULL);
+	ERR_FAIL_COND_MSG(!peer_map.has(p_peer_id), vformat("Peer ID %d not found in the list of peers.", p_peer_id));
+	ERR_FAIL_COND_MSG(!is_server() && p_peer_id != 1, "Can't send packets to other clients when acting as a client. No need to set their timeout");
+	ERR_FAIL_COND_MSG(peer_map[p_peer_id] == nullptr, vformat("Peer ID %d found in the list of peers, but is null.", p_peer_id));
 	enet_peer_timeout(peer_map[p_peer_id], p_timeout_limit, p_timeout_min, p_timeout_max);
 }
 
